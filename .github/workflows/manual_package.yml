@@ -52,3 +52,5 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B deploy --file pom.xml -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
