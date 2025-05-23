@@ -1,0 +1,4 @@
+name: blank
+
+on:
+  workflow_dispatch:
