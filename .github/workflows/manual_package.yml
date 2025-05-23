@@ -18,16 +18,17 @@ jobs:
 
       - name: envars
         run: env
-            
+
       - name: Test output 1
         run: cat /home/runner/.m2/settings.xml
 
       - name: maven-settings-xml-action
+        # https://github.com/marketplace/actions/generate-settings-xml-for-maven-builds
         uses: whelk-io/maven-settings-xml-action@v22
         with:
           servers: | 
             [{
-               "id": "github"
+               "id": "github",
                "username": ${env.GITHUB_ACTOR},
                "password": ${env.GITHUB_TOKEN}
 
@@ -35,19 +36,19 @@ jobs:
           repositories: |
             [{ 
                "id": "github",
-               "url": "https://maven.pkg.github.com/harald-tsys/opentelekomcloud-functiongraph-java"  
+               "url": "https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}"  
             }]
           profiles: |
             [{
                "id": "github",
                "properties": { 
-                   "altSnapshotDeploymentRepository": "github_harald::https://maven.pkg.github.com/harald-tsys/opentelekomcloud-functiongraph-java",
-                   "altReleaseDeploymentRepository": "github_harald::https://maven.pkg.github.com/harald-tsys/opentelekomcloud-functiongraph-java"
+                   "altSnapshotDeploymentRepository": "github_harald::https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}",
+                   "altReleaseDeploymentRepository": "github_harald::https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}"
                 }
             }]
 
       - name: Test output 2
         run: cat /home/runner/.m2/settings.xml
 
-      #- name: Build with Maven
-      #  run: mvn -B package --file pom.xml
+      - name: Build with Maven
+        run: mvn -B deploy --file pom.xml
