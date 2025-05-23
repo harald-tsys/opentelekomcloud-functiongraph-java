@@ -19,9 +19,9 @@ jobs:
       - name: Test output 1
         run: cat /home/runner/.m2/settings.xml
 
-      - uses: s4u/maven-settings-action@v3.1.0
+      - name: maven-settings-xml-action
+        uses: whelk-io/maven-settings-xml-action@v22
         with:
-          githubServer: true
           profiles: |
             [{
                "id": "github",
