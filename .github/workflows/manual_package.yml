@@ -42,8 +42,8 @@ jobs:
             [{
                "id": "github",
                "properties": { 
-                   "altSnapshotDeploymentRepository": "github_harald::https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}",
-                   "altReleaseDeploymentRepository": "github_harald::https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}"
+                   "altSnapshotDeploymentRepository": "github::https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}",
+                   "altReleaseDeploymentRepository": "github::https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}"
                 }
             }]
 
