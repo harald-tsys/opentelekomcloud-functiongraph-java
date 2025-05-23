@@ -2,6 +2,7 @@ name: Manual Package
 
 on:
   workflow_dispatch:
+  pull_request:
 
 jobs:
   deploy:
@@ -17,9 +18,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-
-      # - name: Deploy snapshots with Maven
-      #   run: mvn -B deploy --file pom.xml -s .maven_settings.xml -DretryFailedDeploymentCount=10
-      #   env:
-      #     CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
-      #     CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
