@@ -21,7 +21,7 @@ jobs:
           githubServer: false
 
       - name: Test output
-        run: cat $GITHUB_WORKSPACE/settings.xml
+        run: cat /home/runner/.m2/settings.xml
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
