@@ -5,7 +5,7 @@ on:
     types:
       - published
 
-  pull_request:
+  #pull_request:
   workflow_dispatch:
 
 jobs:
@@ -13,9 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - id: get-pom-version
+        name: Get Pom Version
+        uses: jactions/maven-version@v1
 
       - name: echo
         run: |
+          echo "POM version: ${{ steps.get-pom-version.outputs.version }}"
           echo "branch: ${{ github.ref_name }}"
           echo "commit-sha: ${{ github.sha }}"
           echo "organization: ${{ github.repository_owner }}"
