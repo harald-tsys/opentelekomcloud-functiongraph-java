@@ -1,0 +1,24 @@
+name: release
+# This workflow is triggered when publishing a new GitHub release
+on:
+  release:
+    types:
+      - published
+
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: echo
+        run: |
+          echo "branch: ${{ github.ref_name }}"
+          echo "commit-sha: ${{ github.sha }}"
+          echo "organization: ${{ github.repository_owner }}"
+          echo "repository: ${{ github.event.repository.name }}"
+          echo "version: ${{ github.event.release.tag_name }}"
+
