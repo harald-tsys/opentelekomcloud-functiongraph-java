@@ -61,6 +61,7 @@ jobs:
             mvn -B \
               org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
              -DautoVersionSubmodules=true \
+             -DdevelopmentVersion=0.0.1-SNAPSHOT \
              -DreleaseVersion=${{ github.event.inputs.version }} \
              -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
                           
