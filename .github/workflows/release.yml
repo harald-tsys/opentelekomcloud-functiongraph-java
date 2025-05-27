@@ -62,10 +62,8 @@ jobs:
               org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
              -DautoVersionSubmodules=true \
              -DreleaseVersion=${{ github.event.inputs.version }} \
-             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}" \
-             -DconnectionUrl="scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git" \
-             -Dproject.scm.developerConnection=scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git\
-
+             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
+                          
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -78,6 +76,7 @@ jobs:
             mvn -B \
               org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
              -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
+             
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
