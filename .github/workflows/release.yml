@@ -63,8 +63,7 @@ jobs:
               release:prepare \
              -DautoVersionSubmodules=true \
              -DdevelopmentVersion=0.0.1-SNAPSHOT \
-             -DreleaseVersion=${{ github.event.inputs.version }} \
-             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
+             -DreleaseVersion=${{ github.event.inputs.version }}
                           
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
