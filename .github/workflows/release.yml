@@ -29,6 +29,11 @@ jobs:
           cache: "maven"
           server-id: github
 
+      - name: Setup maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.6.3
+
       - name: Configure Git user
         run: |
           git config user.email "actions@github.com"
@@ -42,7 +47,6 @@ jobs:
           echo "organization name: ${{ github.repository_owner }}"
           echo "repository name: ${{ github.event.repository.name }}"
           echo "version: ${{ github.event.release.tag_name }}"
-           
           echo "JAVA_POM_VERSION=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
 
       # - name: create new release
@@ -59,8 +63,8 @@ jobs:
       - name: Maven prepare release
         run: |
             mvn --batch-mode \
-             -Dtag=${{ github.event.release.tag_name }} \
               release:prepare \
+             -Dtag=${{ github.event.release.tag_name }} \ 
              -DautoVersionSubmodules=true \
              -DdevelopmentVersion=0.0.1-SNAPSHOT \
              -DreleaseVersion=${{ github.event.inputs.version }}
