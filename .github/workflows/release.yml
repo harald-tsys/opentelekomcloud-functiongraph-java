@@ -58,8 +58,9 @@ jobs:
 
       - name: Maven prepare release
         run: |
-            mvn -B \
-              org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
+            mvn --batch-mode \
+             -Dtag=${{ github.event.release.tag_name }} \
+              release:prepare \
              -DautoVersionSubmodules=true \
              -DdevelopmentVersion=0.0.1-SNAPSHOT \
              -DreleaseVersion=${{ github.event.inputs.version }} \
@@ -74,8 +75,8 @@ jobs:
 
       - name: Maven perform release
         run: |
-            mvn -B \
-              org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
+            mvn --batch-mode \
+              release:perform \
              -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
              
         env:
