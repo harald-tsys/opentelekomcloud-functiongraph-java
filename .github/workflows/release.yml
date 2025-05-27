@@ -58,7 +58,7 @@ jobs:
 
       - name: Publish JAR
         run: |
-           ./mvnw -B release:prepare release:perform \
+            mvn -B release:prepare release:perform \
              -DautoVersionSubmodules=true \
              -DreleaseVersion=${{ github.event.inputs.version }} \
              -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}" \
