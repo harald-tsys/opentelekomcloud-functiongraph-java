@@ -56,19 +56,32 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish JAR
+      - name: Maven prepare release
         run: |
             mvn -B \
               org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
-              org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
              -DautoVersionSubmodules=true \
              -DreleaseVersion=${{ github.event.inputs.version }} \
              -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}" \
              -DconnectionUrl="scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git" \
-             -Darguments="-Dproject.scm.developerConnection=\"scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git\""
+             -Dproject.scm.developerConnection=scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git\
 
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: display
+        run: |
+          cat release.properties     
+
+      - name: Maven perform release
+        run: |
+            mvn -B \
+              org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
+             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
+        env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
 
 
