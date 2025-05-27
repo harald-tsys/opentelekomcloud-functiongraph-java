@@ -58,11 +58,14 @@ jobs:
 
       - name: Publish JAR
         run: |
-            mvn -B release:prepare release:perform \
+            mvn -B \
+              org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
+              org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
              -DautoVersionSubmodules=true \
              -DreleaseVersion=${{ github.event.inputs.version }} \
-             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}" \
-             -DconnectionUrl="scm:git:https://github.com/${{ github.repository }}"
+             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}" \
+             -DconnectionUrl="scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git" \
+             -Darguments="-Dproject.scm.developerConnection="scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git"
 
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
