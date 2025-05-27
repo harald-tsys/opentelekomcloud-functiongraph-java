@@ -65,7 +65,7 @@ jobs:
              -DreleaseVersion=${{ github.event.inputs.version }} \
              -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}" \
              -DconnectionUrl="scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git" \
-             -Darguments="-Dproject.scm.developerConnection="scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git"
+             -Darguments="-Dproject.scm.developerConnection=\"scm:git:https://github.com/${{ github.repository_owner }}/${{ github.repository_name }}.git\""
 
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
