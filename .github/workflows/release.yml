@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkou project
+      - name: Checkout project
         uses: actions/checkout@v4
 
       - name: Setup java
@@ -43,47 +43,49 @@ jobs:
         run: |
           echo "branch: ${{ github.ref_name }}"
           echo "commit-sha: ${{ github.sha }}"
-          echo "repository: ${{ github.event.repository }}"
+          echo "repository: ${{ github.repository }}"
+
           echo "organization name: ${{ github.repository_owner }}"
           echo "repository name: ${{ github.event.repository.name }}"
-          echo "version: ${{ github.event.release.tag_name }}"
-          echo "JAVA_POM_VERSION=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
+          # echo "version: ${{ github.event.release.tag_name }}"
 
-      # - name: create new release
-      #   run: |
-      #     echo "new pom version: ${JAVA_POM_VERSION}"
+          echo "JAVA_POM_VERSION=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
 
-      #     mvn versions:set -DnewVersion=$JAVA_POM_VERSION
+      - name: create new release
+        run: |
+          echo "new pom version: ${JAVA_POM_VERSION}"
+
+          mvn versions:set -DnewVersion=$JAVA_POM_VERSION
  
-      #     mvn -B deploy --file pom.xml \
-      #       -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          mvn -B deploy --file pom.xml \
+            -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Maven prepare release
-        run: |
-            mvn --batch-mode \
-              release:prepare \
-             -Dtag=${{ github.event.release.tag_name }} \ 
-             -DautoVersionSubmodules=true \
-             -DdevelopmentVersion=0.0.1-SNAPSHOT \
-             -DreleaseVersion=${{ github.event.inputs.version }}
+      # - name: Maven prepare release
+      #   run: |
+      #       mvn --batch-mode \
+      #         org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
+      #        -Dtag=${{ github.event.release.tag_name }} \ 
+      #        -DautoVersionSubmodules=true \
+      #        -DdevelopmentVersion=0.0.1-SNAPSHOT \
+      #        -DreleaseVersion=${{ github.event.inputs.version }}
                           
-        env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   env:
+      #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: display
-        run: |
-          cat release.properties     
+      # - name: display
+      #   run: |
+      #     cat release.properties     
 
-      - name: Maven perform release
-        run: |
-            mvn --batch-mode \
-              release:perform \
-             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
+      # - name: Maven perform release
+      #   run: |
+      #       mvn --batch-mode \
+      #         org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
+      #        -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
              
-        env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   env:
+      #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
