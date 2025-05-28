@@ -48,16 +48,15 @@ jobs:
 
           echo "organization name: ${{ github.repository_owner }}"
           echo "repository name: ${{ github.event.repository.name }}"
-          # echo "version: ${{ github.event.release.tag_name }}"
-
-          #echo "JAVA_POM_VERSION=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
-          echo "::set-output name=java_pom_version::$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
+          
+          echo "JAVA_POM_VERSION=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
+          echo "java_pom_version=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
 
       - name: set new version in pom
         id: set_pom_version
         run: |
-          echo "new pom version: ${{ steps.config_version.outputs.java_pom_version }}"
-          mvn versions:set -DnewVersion=${{ steps.config_version.outputs.java_pom_version }}
+          echo "new pom version: $JAVA_POM_VERSION"
+          mvn versions:set -DnewVersion=$JAVA_POM_VERSION
  
       - name: deploy artifacts to github artifactory
         id: deploy_github
