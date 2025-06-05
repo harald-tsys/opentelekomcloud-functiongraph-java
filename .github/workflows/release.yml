@@ -65,7 +65,7 @@ jobs:
            echo $B
         env:
           A: ${{ github.sha }}
-          B: $GITHUB_COMMIT_DATE
+          B: ${{ config_version.outputs.GITHUB_COMMIT_DATE }}
 
       # - name: set new version in pom
       #   id: set_pom_version
