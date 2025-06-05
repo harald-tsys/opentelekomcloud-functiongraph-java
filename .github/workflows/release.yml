@@ -34,10 +34,10 @@ jobs:
         with:
           maven-version: 3.6.3
 
-      - name: Configure Git user
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+      # - name: Configure Git user
+      #   run: |
+      #     git config user.email "actions@github.com"
+      #     git config user.name "GitHub Actions"
 
       - name: configure version
         id: config_version
