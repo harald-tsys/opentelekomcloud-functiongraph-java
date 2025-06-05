@@ -57,7 +57,15 @@ jobs:
           echo "JAVA_POM_VERSION=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
           echo "java_pom_version=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
 
-          echo "COMMIT_SHA=$(echo )"
+          echo "GITHUB_COMMIT_DATE=$(git --no-pager log -1 --pretty='format:%cd' --date='format:%Y-%m-%d %H:%M:%S')" >> "$GITHUB_OUTPUT"
+
+      - name: output
+        run: |
+           echo $A
+           echo $B
+        env:
+          A: ${{ github.sha }}
+          B: ${{ GITHUB_COMMIT_DATE}}
 
       # - name: set new version in pom
       #   id: set_pom_version
