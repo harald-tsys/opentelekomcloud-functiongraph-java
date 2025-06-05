@@ -42,7 +42,12 @@ jobs:
       - name: configure version
         id: config_version
         run: |
-          echo "branch: ${{ github.ref_name }}"
+          echo "head_ref: ${{ github.head_ref }}"
+          echo "ref_name: ${{ github.ref_name }}"
+          echo "GH_ACTIONS_GIT_BRANCH: ${{ github.head_ref || github.ref_name }}"
+
+          echo "Commit date: $(git --no-pager log -1 --pretty='format:%cd' --date='format:%Y-%m-%d %H:%M:%S')"
+
           echo "commit-sha: ${{ github.sha }}"
           echo "repository: ${{ github.repository }}"
 
@@ -52,56 +57,72 @@ jobs:
           echo "JAVA_POM_VERSION=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_ENV"
           echo "java_pom_version=$(echo ${{ github.event.inputs.version }} | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
 
-      - name: set new version in pom
-        id: set_pom_version
-        run: |
-          echo "new pom version: $JAVA_POM_VERSION"
-          mvn versions:set -DnewVersion=$JAVA_POM_VERSION
+          echo "COMMIT_SHA=$(echo )"
+
+      # - name: set new version in pom
+      #   id: set_pom_version
+      #   run: |
+      #     echo "new pom version: $JAVA_POM_VERSION"
+      #     mvn versions:set -DnewVersion=$JAVA_POM_VERSION
+
+      # - name: commit to release branch
+      #   run: |
+      #     git add -A
+          
+
  
-      - name: deploy artifacts to github artifactory
-        id: deploy_github
-        run: | 
-          mvn -B deploy --file pom.xml \
-            -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: deploy artifacts to github artifactory
+      #   id: deploy_github
+      #   run: | 
+      #     mvn -B deploy --file pom.xml \
+      #       -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: create release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.event.inputs.version }}
-          release_name: ${{ github.event.inputs.version }}
-          draft: false
-          prerelease: false
-
-
-      # - name: Maven prepare release
+      # - name: tag this version
+      #   id: tag_version
       #   run: |
-      #       mvn --batch-mode \
-      #         org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
-      #        -Dtag=${{ github.event.release.tag_name }} \ 
-      #        -DautoVersionSubmodules=true \
-      #        -DdevelopmentVersion=0.0.1-SNAPSHOT \
-      #        -DreleaseVersion=${{ github.event.inputs.version }}
+      #     git tag ${{ github.event.inputs.version }}
+      #     git push origin ${{ github.event.inputs.version }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: create release
+      #   id: create_release
+      #   uses: actions/create-release@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.event.inputs.version }}
+      #     release_name: ${{ github.event.inputs.version }}
+      #     draft: false
+      #     prerelease: false
+
+
+      # # - name: Maven prepare release
+      # #   run: |
+      # #       mvn --batch-mode \
+      # #         org.apache.maven.plugins:maven-release-plugin:3.1.1:prepare \
+      # #        -Dtag=${{ github.event.release.tag_name }} \ 
+      # #        -DautoVersionSubmodules=true \
+      # #        -DdevelopmentVersion=0.0.1-SNAPSHOT \
+      # #        -DreleaseVersion=${{ github.event.inputs.version }}
                           
-      #   env:
-      #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # #   env:
+      # #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: display
-      #   run: |
-      #     cat release.properties     
+      # # - name: display
+      # #   run: |
+      # #     cat release.properties     
 
-      # - name: Maven perform release
-      #   run: |
-      #       mvn --batch-mode \
-      #         org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
-      #        -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
+      # # - name: Maven perform release
+      # #   run: |
+      # #       mvn --batch-mode \
+      # #         org.apache.maven.plugins:maven-release-plugin:3.1.1:perform \
+      # #        -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.repository_name }}"
              
-      #   env:
-      #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # #   env:
+      # #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
