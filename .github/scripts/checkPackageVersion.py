@@ -9,6 +9,7 @@ USER = os.environ.get("USER")
 PACKAGE_TYPE = os.environ.get("PACKAGE_TYPE", "maven")
 PACKAGE_NAME = os.environ.get("PACKAGE_NAME")
 PACKAGE_VERSION_NAME = os.environ.get("PACKAGE_VERSION")
+OUTPUT_NAME=os.environ.get("OUTPUT_NAME","PACKAGE_EXISTS")
 
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
@@ -30,6 +31,8 @@ if response.status_code == 200:
         if package["name"] == PACKAGE_VERSION_NAME:
             exists = "true"
             break
+else:
+    print(f"response {response.text}")
 
 with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
-    fh.write(f"exists={exists}\n")
+    fh.write(f"{OUTPUT_NAME}={exists}\n")

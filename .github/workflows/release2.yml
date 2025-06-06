@@ -61,13 +61,21 @@ jobs:
           PACKAGE_TYPE: maven
           PACKAGE_NAME: com.opentelekomcloud.opentelekomcloud-functiongraph-java
           PACKAGE_VERSION_NAME: ${{ steps.pom-version.outputs.JAVA_POM_VERSION }}
+          OUTPUT_NAME: PACKAGE_EXISTS
       
       - name: echo-if-artifact-exists"
-        if: "${{ steps.check_package_exist.outputs.exists == 'true' }}"
+        run: echo "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS }}"
+
+      - name: echo-if-artifact-exists"
+        if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS == true }}"
         run: echo "::notice::Artifact exsits, skipping upload."
 
+      - name: echo-if-artifact-not-exists"
+        if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS != true }}"
+        run: echo "::notice::Artifact uploading..."
+
       - name: deploy-artifacts-to-github
-        if: "${{ steps.check_package_exist.outputs.exists != 'true' }}"
+        if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS != true }}"
         id: deploy_github
         run: | 
           mvn -B deploy --file pom.xml \
