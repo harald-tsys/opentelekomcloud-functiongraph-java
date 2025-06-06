@@ -63,6 +63,8 @@ jobs:
           PACKAGE_VERSION_NAME: ${{ steps.pom-version.outputs.JAVA_POM_VERSION }}
           OUTPUT_NAME: PACKAGE_EXISTS
 
+      - run: echo "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS }}"    
+
       - name: echo-if-artifact-exists
         if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS == true }}"
         run: echo "::notice::Artifact exsits, skipping upload."
