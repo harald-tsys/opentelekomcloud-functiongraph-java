@@ -6,7 +6,7 @@
 
   <groupId>com.opentelekomcloud</groupId>
   <artifactId>opentelekomcloud-functiongraph-java</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.3-beta</version>
   <packaging>pom</packaging>
 
   <!-- based on 2.0.6 -->
@@ -21,6 +21,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <scm>
+    <url>https://github.com/harald-tsys/opentelekomcloud-functiongraph-java</url>
+    <connection>scm:git:${project.scm.url}</connection>
+    <developerConnection>scm:git:${project.scm.url}</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -78,7 +85,7 @@
         <version>${junit-jupiter.version}</version>
         <scope>test</scope>
       </dependency>
-  
+
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
@@ -138,6 +145,7 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>${maven-project-info-reports-plugin.version}</version>
         </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -336,6 +344,8 @@
               <version>${maven-release-plugin.version}</version>
               <configuration>
                 <tagNameFormat>v@{project.version}</tagNameFormat>
+                <autoVersionSubmodules>true</autoVersionSubmodules>
+                <scmCommentPrefix>[ci skip]</scmCommentPrefix>
               </configuration>
             </plugin>
 
