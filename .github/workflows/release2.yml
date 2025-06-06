@@ -47,13 +47,18 @@ jobs:
         run: |
           cat ~/.m2/settings.xml
 
-      # - name: deploy-artifacts-to-github
-      #   id: deploy_github
-      #   run: | 
-      #     mvn -B deploy --file pom.xml \
-      #       -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: config-settings
+        uses: s4u/maven-settings-action@v3.1.0
+        with:
+          repositories: '[{"id":"github","name":"github","url":"https://maven.pkg.github.com/${{ github.repository }}","snapshots":{"enabled":true}}]'
+
+      - name: deploy-artifacts-to-github
+        id: deploy_github
+        run: | 
+          mvn -B deploy --file pom.xml \
+            -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Create Release
       #   id: create_release
