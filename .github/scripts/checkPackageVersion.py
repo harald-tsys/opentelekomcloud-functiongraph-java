@@ -21,9 +21,6 @@ url = f"https://api.github.com/users/{USER}/packages/{PACKAGE_TYPE}/{PACKAGE_NAM
 # Make the GET request to the API
 response = requests.get(url, headers=HEADERS)
 
-print(response)
-print(response.text)
-
 exists = "false"
 
 # Check if the request was successful
@@ -39,3 +36,4 @@ else:
 
 with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
     fh.write(f"{OUTPUT_NAME}={exists}\n")
+    fh.write("TEST='Hello World'\n")
