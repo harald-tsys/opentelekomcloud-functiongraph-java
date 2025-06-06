@@ -44,16 +44,18 @@ jobs:
       - name: print-pom-version    
         run: echo "JAVA_POM_VERSION=${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
-      # - name: cat-settings.xml
-      #   run: |
-      #     cat ~/.m2/settings.xml
+      - name: check-artifact-exist
+        id: check_artifact_exist
+        uses: LIT-Protocol/artifact-exists-action@v0
+        with:
+          name: "opentelekomcloud-functiongraph-java:pom:${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
-      # - name: config-settings
-      #   uses: s4u/maven-settings-action@v3.1.0
-      #   with:
-      #     repositories: '[{"id":"github","name":"github","url":"https://maven.pkg.github.com/${{ github.repository }}","snapshots":{"enabled":true}}]'
+      - name: echo-if-artifact-exists"
+        if: "${{ steps.check_artifact_exist.outputs.exists == 'true' }}"
+        run: echo "::notice::Artifact exsits, skipping upload."
 
       - name: deploy-artifacts-to-github
+        if: "${{ steps.check_artifact_exist.outputs.exists != 'true' }}"
         id: deploy_github
         run: | 
           mvn -B deploy --file pom.xml \
