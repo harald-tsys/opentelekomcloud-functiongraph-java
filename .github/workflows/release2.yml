@@ -48,7 +48,7 @@ jobs:
         id: check_artifact_exist
         uses: LIT-Protocol/artifact-exists-action@v0
         with:
-          name: "opentelekomcloud-functiongraph-java:pom:${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
+          name: "com.opentelekomcloud:opentelekomcloud-functiongraph-java:pom:${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
       - name: echo-if-artifact-exists"
         if: "${{ steps.check_artifact_exist.outputs.exists == 'true' }}"
@@ -62,7 +62,6 @@ jobs:
             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 
       - name: Create Release
       # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
