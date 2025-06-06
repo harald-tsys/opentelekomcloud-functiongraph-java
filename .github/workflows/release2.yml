@@ -43,18 +43,22 @@ jobs:
       - name: print-pom-version    
         run: echo "JAVA_POM_VERSION=${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
-      - name: deploy-artifacts-to-github
-        id: deploy_github
-        run: | 
-          mvn -B deploy --file pom.xml \
-            -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: cat-settings.xml
+        run: |
+          cat ~/.m2/settings.xml
 
-      - name: Create Release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          draft: true
-          generateReleaseNotes: true
+      # - name: deploy-artifacts-to-github
+      #   id: deploy_github
+      #   run: | 
+      #     mvn -B deploy --file pom.xml \
+      #       -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Create Release
+      #   id: create_release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     allowUpdates: true
+      #     draft: true
+      #     generateReleaseNotes: true
