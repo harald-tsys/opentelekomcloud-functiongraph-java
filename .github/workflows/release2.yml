@@ -30,6 +30,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
+          cache: 'pip' # caching pip dependencies
+      - name: Install python requirements
+        run: pip install -r .github/scripts/requirements.txt    
 
       - name: Setup maven
         uses: stCarolas/setup-maven@v5
