@@ -61,12 +61,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+
+      - name: Create Release
       # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
-      # - name: Create Release
-      # # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
-      #   id: create_release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     allowUpdates: true
-      #     draft: true
-      #     generateReleaseNotes: true
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          draft: false
+          generateReleaseNotes: true
