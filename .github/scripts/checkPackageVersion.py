@@ -21,6 +21,9 @@ url = f"https://api.github.com/users/{USER}/packages/{PACKAGE_TYPE}/{PACKAGE_NAM
 # Make the GET request to the API
 response = requests.get(url, headers=HEADERS)
 
+print(response)
+print(response.text)
+
 exists = "false"
 
 # Check if the request was successful
