@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      packages: write
 
     steps:
       - name: Checkout project
@@ -43,14 +44,14 @@ jobs:
       - name: print-pom-version    
         run: echo "JAVA_POM_VERSION=${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
-      - name: cat-settings.xml
-        run: |
-          cat ~/.m2/settings.xml
+      # - name: cat-settings.xml
+      #   run: |
+      #     cat ~/.m2/settings.xml
 
-      - name: config-settings
-        uses: s4u/maven-settings-action@v3.1.0
-        with:
-          repositories: '[{"id":"github","name":"github","url":"https://maven.pkg.github.com/${{ github.repository }}","snapshots":{"enabled":true}}]'
+      # - name: config-settings
+      #   uses: s4u/maven-settings-action@v3.1.0
+      #   with:
+      #     repositories: '[{"id":"github","name":"github","url":"https://maven.pkg.github.com/${{ github.repository }}","snapshots":{"enabled":true}}]'
 
       - name: deploy-artifacts-to-github
         id: deploy_github
@@ -60,7 +61,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
       # - name: Create Release
+      # # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
       #   id: create_release
       #   uses: ncipollo/release-action@v1
       #   with:
