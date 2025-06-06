@@ -28,6 +28,7 @@ if response.status_code == 200:
     packages = json.loads(response.text)
 
     for package in packages:
+        print(f"{package['name']} == {PACKAGE_VERSION_NAME} ")
         if package["name"] == PACKAGE_VERSION_NAME:
             exists = "true"
             break
