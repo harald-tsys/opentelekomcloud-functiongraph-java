@@ -26,6 +26,11 @@ jobs:
           cache: "maven"
           server-id: github
 
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
       - name: Setup maven
         uses: stCarolas/setup-maven@v5
         with:
@@ -44,18 +49,22 @@ jobs:
       - name: print-pom-version    
         run: echo "JAVA_POM_VERSION=${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
-      - name: check-artifact-exist
-        id: check_artifact_exist
-        uses: LIT-Protocol/artifact-exists-action@v0
-        with:
-          name: "com.opentelekomcloud:opentelekomcloud-functiongraph-java:pom:${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
-
+      - name: check-package-exist
+        id: check_package_exist
+        run: python3 .github/scripts/checkPackageVersion.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USER: ${{ github.repository_owner }}
+          PACKAGE_TYPE: maven
+          PACKAGE_NAME: com.opentelekomcloud.opentelekomcloud-functiongraph-java
+          PACKAGE_VERSION_NAME: ${{ steps.pom-version.outputs.JAVA_POM_VERSION }}
+      
       - name: echo-if-artifact-exists"
-        if: "${{ steps.check_artifact_exist.outputs.exists == 'true' }}"
+        if: "${{ steps.check_package_exist.outputs.exists == 'true' }}"
         run: echo "::notice::Artifact exsits, skipping upload."
 
       - name: deploy-artifacts-to-github
-        if: "${{ steps.check_artifact_exist.outputs.exists != 'true' }}"
+        if: "${{ steps.check_package_exist.outputs.exists != 'true' }}"
         id: deploy_github
         run: | 
           mvn -B deploy --file pom.xml \
