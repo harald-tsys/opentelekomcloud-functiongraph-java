@@ -44,45 +44,51 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
 
-      - name: get-pom-version
-        id: pom-version
+      - name: echo    
         run: |
-          echo "JAVA_POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+          echo "head_ref: ${{ github.head_ref }}"
+          echo "ref_name: ${{ github.ref_name }}"
+          echo "GH_ACTIONS_GIT_BRANCH: ${{ github.head_ref || github.ref_name }}"
 
-      - name: print-pom-version    
-        run: echo "JAVA_POM_VERSION=${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
+      # - name: get-pom-version
+      #   id: pom-version
+      #   run: |
+      #     echo "JAVA_POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
 
-      - name: check-package-exist
-        id: check_package_exist
-        run: python3 .github/scripts/existsGitHubPackageVersion.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          USERNAME: ${{ github.repository_owner }}
-          PACKAGE_TYPE: maven
-          PACKAGE_NAME: com.opentelekomcloud.opentelekomcloud-functiongraph-java
-          PACKAGE_VERSION_NAME: ${{ steps.pom-version.outputs.JAVA_POM_VERSION }}
-          OUTPUT_NAME: PACKAGE_EXISTS
+      # - name: print-pom-version    
+      #   run: echo "JAVA_POM_VERSION=${{ steps.pom-version.outputs.JAVA_POM_VERSION }}"
 
-      - name: echo-if-package-exists
-        if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS == 'true' }}"
-        run: echo "::notice::Package exsits, skipping upload."
+      # - name: check-package-exist
+      #   id: check_package_exist
+      #   run: python3 .github/scripts/existsGitHubPackageVersion.py
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     USERNAME: ${{ github.repository_owner }}
+      #     PACKAGE_TYPE: maven
+      #     PACKAGE_NAME: com.opentelekomcloud.opentelekomcloud-functiongraph-java
+      #     PACKAGE_VERSION_NAME: ${{ steps.pom-version.outputs.JAVA_POM_VERSION }}
+      #     OUTPUT_NAME: PACKAGE_EXISTS
 
-      - name: deploy-package-to-github
-        if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS != 'true' }}"
-        id: deploy_github
-        run: |
-          echo "::notice::Uploading Package ..."
-          mvn -B deploy --file pom.xml \
-            -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: echo-if-package-exists
+      #   if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS == 'true' }}"
+      #   run: echo "::notice::Package exsits, skipping upload."
 
-      - name: Create Release
-      # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          draft: false
-          generateReleaseNotes: true
-          body: "For documentation see: <https://docs.otc.t-systems.com/opentelekomcloud-functiongraph-java/>"
+      # - name: deploy-package-to-github
+      #   if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS != 'true' }}"
+      #   id: deploy_github
+      #   run: |
+      #     echo "::notice::Uploading Package ..."
+      #     mvn -B deploy --file pom.xml \
+      #       -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Create Release
+      # # https://github.com/ncipollo/release-action/blob/main/.github/workflows/release.yml
+      #   id: create_release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     allowUpdates: true
+      #     draft: false
+      #     generateReleaseNotes: true
+      #     body: "See: [FunctionGraph Java Documentation]<https://helpcenter-docs.obs-website.eu-de.otc.t-systems.com/opentelekomcloud-functiongraph-java/docs-build>"
