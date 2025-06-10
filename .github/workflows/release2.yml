@@ -54,10 +54,10 @@ jobs:
 
       - name: check-package-exist
         id: check_package_exist
-        run: python3 .github/scripts/checkPackageVersion.py
+        run: python3 .github/scripts/existsGitHubPackageVersion.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          USER: ${{ github.repository_owner }}
+          USERNAME: ${{ github.repository_owner }}
           PACKAGE_TYPE: maven
           PACKAGE_NAME: com.opentelekomcloud.opentelekomcloud-functiongraph-java
           PACKAGE_VERSION_NAME: ${{ steps.pom-version.outputs.JAVA_POM_VERSION }}
@@ -67,14 +67,11 @@ jobs:
         if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS == 'true' }}"
         run: echo "::notice::Package exsits, skipping upload."
 
-      - name: echo-if-package-not-exists
-        if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS != 'true' }}"
-        run: echo "::notice::Package uploading..."
-
       - name: deploy-package-to-github
         if: "${{ steps.check_package_exist.outputs.PACKAGE_EXISTS != 'true' }}"
         id: deploy_github
-        run: | 
+        run: |
+          echo "::notice::Uploading Package ..."
           mvn -B deploy --file pom.xml \
             -DaltDeploymentRepository="github::https://maven.pkg.github.com/${{ github.repository }}"
         env:
@@ -88,3 +85,4 @@ jobs:
           allowUpdates: true
           draft: false
           generateReleaseNotes: true
+          body: "For documentation see: <https://docs.otc.t-systems.com/opentelekomcloud-functiongraph-java/>"
